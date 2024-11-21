@@ -1,0 +1,77 @@
+{% load static %}
+{% url 'apt_injecao' as apt_injecao %}
+{% url 'apt_geral' as apt_geral %}
+{% url 'recebimento' as recebimento %}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <title>Chão de fábrica</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{% static 'geral/css/base.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="{% static 'geral/js/base.js' %}"></script>
+    {% block 'head' %}{% endblock %}
+</head>
+
+<body >
+    <div class="shadow-lg w-full">
+        <header class="navbar h-full px-3 flex justify-between items-center">
+            {% block title %}<p>CHÃO DE FÁBRICA</p>{% endblock %}
+            <nav>
+                <div class="hidden md:flex font-bold">
+                    <!-- Dropdown Apontamento -->
+                    <div class="relative group">
+                        <button id="btListApt" class="transition-colors py-2 px-3 duration-300 flex items-center {% if request.path == apt_injecao or request.path == apt_geral  %}bg-emerald-700{% endif %}">
+                            Apontamento
+                            <span class="ml-1">▾</span>
+                        </button>
+                        <!-- Dropdown menu -->
+                        <div
+                        id="listApt"
+                        class="absolute mt-1 hidden w-full flex flex-col items-center p-1 shadow-md z-10 navbar">
+                            <a href="{% url 'apt_injecao' %}"
+                                class="w-full py-2 text-center text-gray-100 transition duration-200 ease-in-out rounded hover:bg-gray-100 hover:text-emerald-600 {% if request.path == apt_injecao %}bg-emerald-700 text-white{% endif %}">
+                                Injeção
+                            </a>
+                            <a href="{% url 'apt_geral' %}"
+                                class="w-full py-2 text-center text-gray-100 transition duration-200 ease-in-out rounded hover:bg-gray-100 hover:text-emerald-600 {% if request.path == apt_geral %}bg-emerald-700 text-white{% endif %}">
+                                Geral
+                            </a>
+                        </div>
+                    </div>
+                    <a href="{% url 'recebimento' %}" class="transition-colors py-2 px-3 duration-300 {% if request.path == recebimento %}bg-emerald-700{% endif %}">Recebimento</a>
+                    <a href="#" class="py-2 px-3 opacity-50 pointer-events-none transition-colors duration-300">Embalagens</a>
+                    <a href="{% url 'logout' %}" class="transition-colors py-2 px-3 duration-300">Sair</a>
+                </div>
+                <button id="btMenu" class="md:hidden text-2xl">☰</button>
+                <div id="mobile-menu" class="mobile-menu hidden text-right absolute left-0 w-full shadow-lg md:hidden z-50">
+                        <div class="flex flex-col space-y-3 p-4">
+                            <!-- Dropdown Apontamento -->
+                        <div class="relative group">
+                            <button id="btListAptM" class="transition-colors py-1 px-1 {% if request.path == apt_injecao or request.path == apt_geral  %}bg-emerald-700{% endif %} duration-300">
+                                Apontamento
+                                <span class="ml-1">▾</span>
+                            </button>
+                            <!-- Dropdown menu -->
+                            <div id="listAptM" class="right-0 mt-1 hidden flex flex-col navbar p-1 z-10">
+                                <a href="{% url 'apt_injecao' %}" class="hover:bg-gray-100 hover:text-emerald-600 px-4 py-1 border-t {% if request.path == apt_injecao  %}bg-emerald-700{% endif %}">Injeção</a>
+                                <a href="{% url 'apt_geral' %}" class="hover:bg-gray-100 hover:text-emerald-600 px-4 py-1 border-t border-b {% if request.path == apt_geral  %}bg-emerald-700{% endif %}">Geral</a>
+                            </div>
+                        </div>
+                        <a href="{% url 'recebimento' %}" class="transition-colors py-1 px-1 duration-300 {% if request.path == recebimento %}bg-emerald-700{% endif %}">Recebimento</a>
+                        <a href="" class="opacity-50 pointer-events-none transition-colors py-1 px-1 duration-300">Embalagens</a>
+                        <a href="{% url 'logout' %}" class="transition-colors py-1 px-1 duration-300">Sair</a>
+                    </div>
+                </div>
+            </nav>
+        </header>
+    
+        {% block 'body' %}{% endblock %}
+    </div>
+</body>
+
+</html>

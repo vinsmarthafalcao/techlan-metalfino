@@ -1,0 +1,140 @@
+{% extends "base.html" %} {# Extende o template base #}
+{% load static %} {# Carrega os arquivos estáticos #}
+
+
+{% block 'body' %}
+<!-- Formulário de Apontamento -->
+<form data-url="{% url 'apt_injecao' %}" class="mt-4 space-y-4 px-4" id="formApontamento">
+    {% csrf_token %}
+    <!-- Seção de Inputs do Formulário -->
+    <div class="grid grid-cols-1 md:grid-cols-10 gap-4">
+        <div class="relative md:col-span-3">
+            <label for="codpro" class="block">Produto</label>
+            <input name="codpro" data-url="{% url 'listaProdutos' %}" id="codpro" type="text"
+                oninput="this.value = this.value.toUpperCase()"
+                class="autoComplete focus required border border-gray-300 p-2 rounded-md w-full">
+        </div>
+        <div class="relative md:col-span-3">
+            <label for="codori" class="block">Origem</label>
+            <input name="codori" data-url="{% url 'listaOrigens' %}" type="text" id="codori"
+                oninput="this.value = this.value.toUpperCase()"
+                class="autoComplete focus required border border-gray-300 p-2 rounded-md w-full">
+        </div>
+        <div class="relative md:col-span-3">
+            <label for="numorp" class="block">O.P</label>
+            <div class="flex items-center">
+                <input data-url="{% url 'getDataOp' %}" name="numorp" type="number" id="numorp"
+                    class="required border border-gray-300 p-2 rounded-md w-full pr-12">
+                <button type="button" id="openModalOp" class="absolute right-3 p-1 mt-2 rounded-md text-gray-500"
+                    aria-label="Buscar">
+                    <ion-icon name="search-outline" class="h-6 w-6"></ion-icon>
+                </button>
+            </div>
+        </div>
+        <div id="opLoading" class="relative md:col-span-1 loading pt-7 hidden" role="status"></div>
+        <!-- Modal -->
+        <div id="opModal" data-url="{% url 'listaOps' %}"
+            class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 px-5">
+            <div class="bg-white shadow-lg w-auto justify-center h-auto mb-5">
+                <div class="bg-emerald-600 -mt-5 flex justify-between items-center p-1">
+                    <h2 class="text-xl font-bold text-white">ORDEM DE PRODUÇÃO</h2>
+                    <button type="button" id="closeModalOp" class="text-white hover:text-gray-300 focus:outline-none">
+                        <ion-icon class="text-[25px]" name="close-outline"></ion-icon>
+                    </button>
+                </div>
+
+                <!-- Conteúdo da tabela com cabeçalho fixo -->
+                <div class="overflow-y-auto max-h-80">
+                    <table class="min-w-full bg-white border border-gray-200 shadow">
+                        <!-- Cabeçalho fixo da tabela -->
+                        <thead class="bg-gray-100 sticky top-0 z-10">
+                            <tr>
+                                <th class="px-4 py-2 border-b text-balance text-[18px] font-medium text-gray-700">Núm
+                                    O.P</th>
+                                <th
+                                    class="px-4 py-2 border-b hidden md:block text-balance text-[18px] font-medium text-gray-700">
+                                    Status</th>
+                                <th class="px-4 py-2 border-b text-balance text-[18px] font-medium text-gray-700">Origem
+                                </th>
+                                <th
+                                    class="px-4 py-2 border-b hidden md:block text-balance text-[18px] font-medium text-gray-700">
+                                    Produto</th>
+                                <th class="px-4 py-2 border-b text-balance text-[18px] font-medium text-gray-700">Data
+                                    de Geração</th>
+                            </tr>
+                        </thead>
+                        <!-- Corpo da tabela com rolagem -->
+                        <tbody id="opTableBody" class="divide-y divide-gray-200 text-center">
+                            <!-- Linhas da tabela aqui -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!--Loading caso o modal demore um pouco-->
+
+                <div class="flex justify-center items-center py-4 loading" role="status">
+                </div>
+                <div id="pagination" class="mt-1 flex justify-center"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <p class="text-red-500 text-md" id="msgOp"></p>
+
+    <hr class="my-4">
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="relative">
+            <label for="inimov" class="block">Início</label>
+            <input type="datetime-local" name="inimov" id="inimov"
+                class="required border border-gray-300 p-2 rounded-md w-full">
+        </div>
+        <div class="relative">
+            <label for="fimmov" class="block">Fim</label>
+            <input type="datetime-local" name="fimmov" id="fimmov"
+                class="required border border-gray-300 p-2 rounded-md w-full">
+        </div>
+
+        <div class="relative">
+            <label for="numcad" class="block">Operador</label>
+            <input type="text" data-url="{% url 'listaOperadores' %}" name="numcad" id="numcad"
+                class="autoComplete required border border-gray-300 p-2 rounded-md w-full">
+        </div>
+        <div class="relative">
+            <label for="codetg" class="block">Estágio</label>
+            <input type="text" name="codetg" id="codetg"
+                class="autoComplete focus required roteiro border border-gray-300 p-2 rounded-md w-full">
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="relative">
+            <label for="seqrot" class="block">Seq. Roteiro</label>
+            <input type="text" name="seqrot" id="seqrot"
+                class="autoComplete focus required roteiro border border-gray-300 p-2 rounded-md w-full">
+        </div>
+        <div class="relative">
+            <label for="codcre" class="block">C. Recurso</label>
+            <input name="codcre" id="codcre" data-url="{% url 'listaCentroRecursos' %}"
+                oninput="this.value = this.value.toUpperCase()" type="text" id="cRecurso"
+                class="autoComplete focus required border border-gray-300 p-2 rounded-md w-full">
+        </div>
+        {% block 'form_apontamento' %}{% endblock %}
+    </div>
+    <hr class="my-4">
+    
+    {% block 'gridEmbalagens' %}{% endblock %}
+
+    <!-- Botões Apontar e Cancelar -->
+    <div class="flex justify-center space-x-4 py-2">
+        <button value="A" id="btapontar" type="button"
+            class="button py-2 px-4 rounded-lg text-white hover:scale-90 font-semibold transition duration-300"
+            aria-label="Apontar">Finalizar</button>
+        <button type="button" id="btcancelar"
+            class="button py-2 px-4 rounded-lg text-white font-semibold hover:scale-90 transition duration-300"
+            aria-label="Cancelar">Cancelar</button>
+    </div>
+</form>
+
+{% endblock %}

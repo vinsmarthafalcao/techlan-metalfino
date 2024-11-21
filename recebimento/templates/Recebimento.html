@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block 'head' %}
+<script type="module" src="{% static 'recebimento/js/recebimento.js' %}"></script>
+<script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.3.1/dist/jsQR.js"></script>
+{% endblock %}
+{% block title %}<p>CHÃO DE FÁBRICA - RECEBIMENTO</p>{% endblock %}
+
+
+{% block 'body' %}
+
+<body data-url="{% url 'recebimento' %}" class="bg-gray-100">
+    {% csrf_token %}
+    <div class="flex flex-wrap gap-1 py-4 px-4 justify-center sm:justify-start">
+        <button id="lerEmbalagem" class="px-4 py-2 bg-emerald-600 text-white font-bold rounded hover:bg-emerald-500">Ler
+            Embalagem</button>
+        <button id="sumarizar"
+            class="px-4 py-2 bg-emerald-600 text-white rounded font-bold hover:bg-emerald-500">Sumarizar</button>
+        <button id="limpar" onclick="location.reload()"
+            class="px-4 py-2 bg-emerald-600 text-white rounded font-bold hover:bg-emerald-500" >Limpar</button>
+        <div id="recebimentoLoading" class="relative md:col-span-1 loading ml-3 hidden" role="status"></div>
+        <p class="text-md mt-2 ml-3" id="msg"></p>
+    </div>
+    <hr>
+    <!-- Contêiner para cards de embalagens -->
+    <div data-url="{% url 'getPackage' %}" id="embalagens-container"
+        class="mt-6 min-w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-4 px-4">
+        <!-- Os cards serão inseridos aqui -->
+         <!-- Template de embalagem Recebimento -->
+         <div hidden id="template-embalagem">
+            <div class="emb-header flex items-center justify-between bg-emerald-600 rounded-t-lg px-3 py-1">
+                <div class="flex items-center space-x-3">
+                    <div class="flex items-center justify-center w-10 h-10 bg-emerald-500 text-white rounded-full">
+                        <i class="bi bi-box text-lg"></i>
+                    </div>
+                    <h5 class="text-lg font-semibold text-white">Embalagem</h5>
+                </div>
+                <button aria-label="Remover Embalagem" class="remove-embalagem font-bold text-white hover:text-red-600 transition-colors" tabindex="0">
+                    <i class="bi bi-trash3"></i>
+                </button>
+            </div>
+            <fieldset class="emb-body p-3 bg-white rounded-b-lg shadow-md border border-gray-300">
+                <div class="mb-3 text-gray-700">
+                 <legend class="text-emerald-700 font-semibold mb-3">Detalhes da embalagem</legend>
+                    <strong>Produto:</strong> <span class="embcodpro"></span>
+                </div>
+                <div class="mb-3 text-gray-700">
+                    <strong>Ordem de Produção:</strong> <span class="embnumorp"></span>
+                </div>
+                <div class="mb-3 text-gray-700">
+                    <strong>Depósito:</strong> <span class="embcoddep"></span>
+                </div>
+                <div class="mb-3 text-gray-700">
+                    <strong>Lote:</strong> <span class="embcodlot"></span>
+                </div>
+                <div class="mb-3 text-gray-700">
+                    <strong>Quantidade:</strong> 
+                    <input class="embqtdemb px-3 w-40 rounded-lg border border-gray-300" type="number" min="1">
+                </div>
+                <hr class="border-t-2 border-gray-300 my-2"/>
+            </fieldset>
+        </div>
+    </div>
+    <!-- Modal para sumarização de produtos -->
+    <div id="modal-sumarizar" class="fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg shadow-lg overflow-hidden w-[90%] sm:w-[700px]">
+            <div class="bg-emerald-600 text-white flex items-center justify-between px-3 py-2">
+                <h2 id="modal-sumarizar-title" class="text-lg font-semibold">Recebimento</h2>
+            </div>
+            <div class="p-1">
+                <table class="w-full divide-y px-2 text-center divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th class="py-2 px-4 text-center">Produto</th>
+                            <th class="py-2 px-4 text-center">O.P</th>
+                            <th class="py-2 px-4 text-center">Lote</th>
+                            <th class="py-2 px-4 text-center">Quantidade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- As linhas serão preenchidas aqui pelo JavaScript -->
+                    </tbody>
+                </table>
+            </div>
+            <div class="flex items-center justify-between bg-gray-100 p-4">
+                <div class="flex items-center">
+                    <label for="depositDestination" class="mr-1">Depósito</label>
+                    <input data-url="{% url 'getDepositDestination' %}" disabled type="text" id="depositDestination" class="px-4 py-2 border rounded-md" />
+                </div>
+                
+                <div class="flex justify-end">
+                    <button id="btclose" class="px-4 py-2 mr-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600">Fechar</button>
+                    <button id="btreceive" class="px-4 py-2 bg-emerald-600 text-white font-semibold rounded-md hover:bg-emerald-500">Receber</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+{% endblock %}

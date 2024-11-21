@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --primary-color: #40a080;
+    --background-color: #F3F4F6; 
+    --background-color-card: #e4e6e3;
+    --secondary-color: #3c846c;
+    --contrast-color: #F3F4F6;
+    --text-light: #FFFFFF; 
+    --text-error: #B22222;
+    --font-title: bold 18px/1.2 'Menlo', 'Monaco', 'Courier New', monospace; 
+    --font-text: bold 14px/1.5 'Menlo', 'Monaco', 'Courier New', monospace; 
+    --font-error: bold 12px/1.5 'Menlo', 'Monaco', 'Courier New', monospace; 
+    --font-title-search: 18px/1.5 'Menlo', 'Monaco', 'Courier New', monospace; 
+    --font-title-card: 16px/1.5 'Menlo', 'Monaco', 'Courier New', monospace; 
+}
+
+body {
+    background-color: var(--background-color); 
+    font: var(--font-title-search);
+  
+}
+
+.navbar {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    font: var(--font-title);
+}
+
+.button {
+    background-color: var(--primary-color); 
+    color: var(--text-light);
+    font: var(--font-title);
+    
+}
+
+.mobile-menu{   
+    background-color: var(--primary-color);
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.msgSuccess {
+    color: #059669;
+}
+
+.msgError {
+    color: #ef4444;
+}
+
+.loading::before {
+    content: "";
+    display: inline-block;
+    width: 2rem; /* w-8 */
+    height: 2rem; /* h-8 */
+    border-radius: 50%;
+    border: 4px solid #e5e7eb; /* text-gray-200 */
+    border-top-color: #16a34a; /* fill-green-600 */
+    animation: spin 1s linear infinite;
+}
+
+/* Animação do spinner */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+
+

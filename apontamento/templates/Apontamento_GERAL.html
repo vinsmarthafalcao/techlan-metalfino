@@ -1,0 +1,82 @@
+{% extends "Apontamento_BASE.html" %} {# Extende o template base #}
+{% load static %} {# Carrega os arquivos estáticos #}
+
+{% block title %}<p>CHÃO DE FÁBRICA - GERAL</p>{% endblock %}
+{% block 'head' %}
+<link href="{% static 'apontamento/css/apontamento.css' %}" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.3.1/dist/jsQR.js"></script>
+<script type="module" src="{% static 'apontamento/js/geral.js' %}"></script>
+<script src="https://unpkg.com/ionicons@5.5.2/dist/ionicons.js"></script>
+{% endblock %}
+
+
+{% block 'gridEmbalagens' %}
+<!-- Container para os cards de embalagens -->
+<div data-url="{% url 'getPackage' %}" id="embalagens-container"
+    class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-4 px-4">
+    <!-- Template de embalagem Apontamento -->
+    <div hidden id="template-embalagem-apt" class="bg-white shadow-md border border-gray-300 rounded-lg w-full">
+        <div class="bg-emerald-600 text-white rounded-t-lg flex items-center justify-center px-4 py-2 relative">
+            <h5 class="font-semibold text-center">Apontamento Embalagem</h5>
+            <button aria-label="Remover Embalagem"
+                class="absolute right-4 text-white hover:text-red-600 transition-colors">
+                <i class="bi bi-trash3"></i>
+            </button>
+        </div>
+        <div class="flex">
+            <!-- Embalagem Lida -->
+            <div class="w-1/2 p-3 border-r border-gray-300">
+                <div class="text-center text-gray-600 font-semibold mb-3 border-b pb-2">Lida: <span class="numembLido"></span></div>
+                <div class="space-y-2">
+                    <div class="flex items-center text-gray-700">
+                        <label class="font-semibold mr-2 w-1/2">Produto:</label>
+                        <input type="text" class="codproLido bg-gray-200 border border-gray-300 rounded-lg text-center px-2 py-1 w-1/2 ml-auto" readonly>
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <label class=" font-semibold mr-2 w-1/2">Qtd.:</label>
+                        <input type="text" class="qtdembLido bg-gray-200 border border-gray-300 rounded-lg text-center px-2 py-1 w-1/2 ml-auto" readonly>
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <label class="font-semibold mr-2 w-1/2">Saldo:</label>
+                        <input type="text" class="saldo bg-gray-200 border border-gray-300 rounded-lg text-center px-2 py-1 w-1/2 ml-auto" readonly>
+                    </div>
+                </div>
+            </div>
+            <!-- Embalagem Processada -->
+            <div class="w-1/2 p-3">
+                <div class="text-center text-gray-600 font-semibold mb-3 border-b pb-2">Processada: <span class="numembPro"></span></div>
+                <div class="space-y-2">
+                    <div class="flex items-center text-gray-700">
+                        <label class="font-semibold mr-2 w-1/2">Produto:</label>
+                        <input type="text" class="codproPro bg-gray-200 border border-gray-300 rounded-lg text-center px-2 py-1 w-1/2 ml-auto" readonly>
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <label class="font-semibold mr-2 w-1/2">Qtd. 1º:</label>
+                        <input type="text" class="qtd1qld rounded-lg border border-gray-300 text-center px-2 py-1 w-1/2 ml-auto">
+                    </div>
+                    <div class="flex items-center text-gray-700">
+                        <label class="font-semibold mr-2 w-1/2">Refugo:</label>
+                        <input type="text" class="qtdrfg rounded-lg border border-gray-300 text-center px-2 py-1 w-1/2 ml-auto">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Botão Adicionar Embalagem -->
+<div class="flex justify-center mt-4 px-3">
+    <button id="btAddEmb" type="button"
+        class="button hover:scale-90 hover:shadow-lg transition-all duration-300 ease-in-out w-full max-w-xs py-2 my-3 rounded-lg text-white font-semibold"
+        aria-label="Adicionar Embalagens">Ler Embalagens</button>
+</div>
+
+<div class="flex justify-center">
+    <div class="rounded-lg px-4 py-1">
+        <div id="contagem-display" class="hidden font-light px-2 text-black">Total de Embalagens: 0</div>
+        <div id="msgGeral" class="text-center"></div>
+        <div class="loading hidden" id="grLoading" role="status"></div>
+    </div>
+</div>
+
+{% endblock %}
